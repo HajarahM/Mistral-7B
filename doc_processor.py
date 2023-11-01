@@ -1,10 +1,8 @@
 import os
-#import fitz  # PyMuPDF
 from llmsherpa.readers import LayoutPDFReader
 from langchain.vectorstores import Chroma
 from langchain.embeddings import OllamaEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders import DirectoryLoader
 
 class DocumentProcessor:
     def __init__(self, input_dir, output_dir, pdf_reader, embeddings):
