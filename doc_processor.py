@@ -40,7 +40,7 @@ class DocumentProcessor:
         return text
 
     def create_embeddings(self, text):
-        text_splitter = RecursiveCharacterTextSplitter (chunk_size=500, chunk_overlap=10, separators=['\n\n', '\n', '.'])
+        text_splitter = RecursiveCharacterTextSplitter (chunk_size=10000, chunk_overlap=20, separators=['\n\n', '\n', '.'])
         document_chunks = text_splitter.split_documents(text)
         return document_chunks
 
