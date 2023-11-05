@@ -31,10 +31,10 @@ llm = Ollama(
 #LOAD DATA FROM DIRECTORY
 
 #Print number of txt files in specified directory (data)
-loader = DirectoryLoader('./data', glob="./*.txt")
+loader = DirectoryLoader('./data/', glob="./*.txt")
 
 #load pdfs from directory and print number of pdfs
-loader = DirectoryLoader('./data', glob="./*.pdf")
+loader = DirectoryLoader('./data/', glob="./*.pdf")
 
 doc = loader.load()
 
@@ -95,5 +95,5 @@ qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
 #     retriever = retriever, 
 #     chain_type_kwargs={"prompt":QA_PROMPT}
 #     )
-query = "What is this document about?"
+query = "What are the documents about?"
 llm_response = qa_chain(query)
