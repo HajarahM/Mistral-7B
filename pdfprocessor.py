@@ -1,6 +1,6 @@
 import os
 from llmsherpa.readers import LayoutPDFReader
-from langchain.vectorstores import FAISS
+from langchain.vectorstores import faiss
 from langchain.embeddings import OllamaEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import PyPDFDirectoryLoader
@@ -49,7 +49,11 @@ class DocumentProcessor:
                     text = self.convert_pdf_to_text(pdf_path)
                     embeddings = self.create_embeddings(text)
                     self.save_embeddings(embeddings, filename)
-
+                    text_embedding_pairs = zip(text, embeddings)
+                    text_embedding_pairs_list = list(text_embedding_pairs)
+                    faiss = faiss.from_embeddings(text_embedding_pairs_list, embeddings)
+                    faiss.save_local
+        
     def convert_pdf_to_text(self, pdf_path):
         """
         Convert a PDF to text using OCR.
@@ -103,11 +107,20 @@ class DocumentProcessor:
             filename (str): The filename to use for the index.
         """
         index_path = os.path.join(self.vector_store_dir, filename)
-        index = FAISS()
-        for doc_chunk in document_chunks:
-            index.insert([doc_chunk])
-        # Save the persistent database
-        index.persist(index_path)
+        vector_store = FAISS.from_documents(text_chunks, embedding=embedding_model)
+
+        for doc_chunk in document_chunks:    
+            folder_path="FAISS_vector_store"
+            if os.path.exists(folder_path):
+                faiss_index=FAISS.load_local(folder_path, embeddings)
+                faiss_index.merge_from(vector_store)
+                faiss_index.save_local(folder_path)
+            else:
+                vector_store.save_local(folder_path)
+                    # Save the persistent database
+                    index.persist(index_path)
+
+        faiss = FAISS.from_embeddings(text_embedding_pairs_list, embeddings)
 
 if __name__ == "__main__":
     embeddings = OllamaEmbeddings(model="mistral")
